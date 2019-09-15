@@ -29,8 +29,30 @@ func bubbleSort(toSort []int) []int {
 	return toSort
 }
 
+func insertionSort(toSort []int) []int {
+
+	sorted := make([]int, 0, len(toSort))
+
+	for _, item := range toSort {
+		sorted = append(sorted, item)
+
+		for i := len(sorted) - 1; i > 0; i-- {
+			prevIndex := i - 1
+
+			if sorted[i] < sorted[prevIndex] {
+				swap(sorted, i, prevIndex)
+			} else {
+				break
+			}
+
+		}
+	}
+
+	return sorted
+}
+
 func main() {
-	toSort := []int{5, 9, 2, 7, 1}
-	sorted := bubbleSort(toSort)
+	toSort := []int{24, 13, 9, 64, 7, 23, 34, 47}
+	sorted := insertionSort(toSort)
 	fmt.Println(sorted)
 }
