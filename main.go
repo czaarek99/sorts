@@ -84,23 +84,6 @@ func mergeSort(toSort []int) []int {
 		sorted[sortedIndex] = newSlice
 	}
 
-	mergeSlice := make([][]int, getMergeSliceSize(len(sorted)))
-
-	for i, slice := range sorted {
-		if i%2 == 0 {
-			nextSlice := sorted[i+1]
-
-			index1 := 0
-			index2 := 0
-
-			for i := 0; i < len(slice); i++ {
-				if slice[index1] < nextSlice[index2] {
-					slice = append(slice, slice[index1])
-				}
-			}
-		}
-	}
-
 	fmt.Println(sorted)
 	return sorted[0]
 }
