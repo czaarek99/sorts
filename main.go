@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 func swap(slice []int, index1 int, index2 int) []int {
@@ -51,8 +52,61 @@ func insertionSort(toSort []int) []int {
 	return sorted
 }
 
-func main() {
-	toSort := []int{24, 13, 9, 64, 7, 23, 34, 47}
-	sorted := insertionSort(toSort)
+func getMergeSliceSize(length int) int {
+	return int(math.Ceil(float64(length) / 2))
+}
+
+func mergeSort(toSort []int) []int {
+
+	halfLength := int(getMergeSliceSize(len(toSort)))
+	sorted := make([][]int, halfLength)
+
+	sortedIndex := -1
+
+	for index, item := range toSort {
+		var newSlice []int
+
+		if index%2 == 0 {
+			slice := make([]int, 0, 2)
+			newSlice = append(slice, item)
+
+			sortedIndex++
+		} else {
+			slice := sorted[sortedIndex]
+
+			if slice[0] > item {
+				newSlice = []int{item, slice[0]}
+			} else {
+				newSlice = append(slice, item)
+			}
+		}
+
+		sorted[sortedIndex] = newSlice
+	}
+
+	mergeSlice := make([][]int, getMergeSliceSize(len(sorted)))
+
+	for i, slice := range sorted {
+		if i%2 == 0 {
+			nextSlice := sorted[i+1]
+
+			index1 := 0
+			index2 := 0
+
+			for i := 0; i < len(slice); i++ {
+				if slice[index1] < nextSlice[index2] {
+					slice = append(slice, slice[index1])
+				}
+			}
+		}
+	}
+
 	fmt.Println(sorted)
+	return sorted[0]
+}
+
+func main() {
+	toSort := []int{24, 13, 9, 64, 7, 23, 34, 47, 5}
+	mergeSort(toSort)
+	//fmt.Println(sorted)
 }
