@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 )
 
 func swap(slice []int, index1 int, index2 int) []int {
@@ -52,44 +51,81 @@ func insertionSort(toSort []int) []int {
 	return sorted
 }
 
-func getMergeSliceSize(length int) int {
-	return int(math.Ceil(float64(length) / 2))
+func merge(left []int, right []int) []int {
+
+	totalSize := len(left) + len(right)
+
+	merged := make([]int, 0, totalSize)
+
+	leftIndex := 0
+	rightIndex := 0
+
+	for leftIndex+rightIndex < totalSize {
+
+		if leftIndex > len(left)-1 {
+			rightItem := right[rightIndex]
+
+			merged = append(merged, rightItem)
+			rightIndex++
+
+			continue
+		}
+
+		if rightIndex > len(right)-1 {
+			leftItem := left[leftIndex]
+
+			merged = append(merged, leftItem)
+			leftIndex++
+
+			continue
+		}
+
+		leftItem := left[leftIndex]
+		rightItem := right[rightIndex]
+
+		if leftItem < rightItem {
+			merged = append(merged, leftItem)
+			leftIndex++
+		} else {
+			merged = append(merged, rightItem)
+			rightIndex++
+		}
+	}
+
+	return merged
 }
 
 func mergeSort(toSort []int) []int {
 
-	halfLength := int(getMergeSliceSize(len(toSort)))
-	sorted := make([][]int, halfLength)
+	toMerge := make([][]int, 0, len(toSort))
 
-	sortedIndex := -1
-
-	for index, item := range toSort {
-		var newSlice []int
-
-		if index%2 == 0 {
-			slice := make([]int, 0, 2)
-			newSlice = append(slice, item)
-
-			sortedIndex++
-		} else {
-			slice := sorted[sortedIndex]
-
-			if slice[0] > item {
-				newSlice = []int{item, slice[0]}
-			} else {
-				newSlice = append(slice, item)
-			}
-		}
-
-		sorted[sortedIndex] = newSlice
+	for _, item := range toSort {
+		toMerge = append(toMerge, []int{item})
 	}
 
-	fmt.Println(sorted)
-	return sorted[0]
+	for len(toMerge) > 1 {
+		newToMerge := make([][]int, 0)
+
+		for i := 0; i < len(toMerge); i += 2 {
+			var merged []int
+
+			if i+1 >= len(toMerge) {
+				merged = merge(toMerge[i], []int{})
+			} else {
+				merged = merge(toMerge[i], toMerge[i+1])
+			}
+
+			newToMerge = append(newToMerge, merged)
+		}
+
+		toMerge = newToMerge
+	}
+
+	return toMerge[0]
 }
 
 func main() {
 	toSort := []int{24, 13, 9, 64, 7, 23, 34, 47, 5}
-	mergeSort(toSort)
-	//fmt.Println(sorted)
+	sorted := mergeSort(toSort)
+	fmt.Println(sorted)
 }
