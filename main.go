@@ -2,15 +2,12 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 )
 
 func swap(slice []int, index1 int, index2 int) []int {
-	firstVal := slice[index1]
-	secondVal := slice[index2]
-
-	slice[index1] = secondVal
-	slice[index2] = firstVal
-
+	slice[index1], slice[index2] = slice[index2], slice[index1]
 	return slice
 }
 
@@ -122,6 +119,45 @@ func mergeSort(toSort []int) []int {
 	}
 
 	return toMerge[0]
+}
+
+func getRandomInRange(min int, max int) int {
+	rand.Seed(time.Now().UnixNano())
+	return rand.Intn(max-min+1) + min
+}
+
+func quickSort(toSort []int, min int, max int) []int {
+
+	pivotIndex := getRandomInRange(min, max)
+
+	pivot := toSort[pivotIndex]
+
+	//swap the last item with the pivot
+	toSort = swap(toSort, pivotIndex, max)
+
+	leftIndex := min
+	rightIndex := max
+
+	for leftIndex < rightIndex {
+		shouldSwap := true
+
+		if toSort[leftIndex] < pivot {
+			leftIndex++
+			shouldSwap = false
+		}
+
+		if toSort[rightIndex] > pivot {
+			rightIndex++
+			shouldSwap = false
+		}
+
+		if shouldSwap {
+			toSort = swap(toSort, leftIndex, rightIndex)
+		}
+	}
+
+	toSort = swap(toSort, pivotIndex, max)
+
 }
 
 func main() {
