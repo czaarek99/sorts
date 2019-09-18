@@ -126,6 +126,7 @@ func getRandomInRange(min int, max int) int {
 	return rand.Intn(max-min+1) + min
 }
 
+//TODO: Make this support dupelicates + items equal to pivot
 func quickSort(toSort []int, min int, max int) []int {
 
 	pivotIndex := min
