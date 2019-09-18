@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"math/rand"
 	"time"
 )
@@ -129,7 +128,7 @@ func getRandomInRange(min int, max int) int {
 
 func quickSort(toSort []int, min int, max int) []int {
 
-	pivotIndex := int(math.Floor(float64(max-min) / 2))
+	pivotIndex := min
 
 	pivot := toSort[pivotIndex]
 
@@ -137,40 +136,41 @@ func quickSort(toSort []int, min int, max int) []int {
 	toSort = swap(toSort, pivotIndex, max)
 
 	leftIndex := min
-	rightIndex := max
+	rightIndex := max - 1
 
 	for leftIndex < rightIndex {
-		shouldSwap := true
+		if toSort[leftIndex] > pivot && toSort[rightIndex] < pivot {
+			toSort = swap(toSort, leftIndex, rightIndex)
+		}
 
 		if toSort[leftIndex] < pivot {
 			leftIndex++
-			shouldSwap = false
+		}
+
+		if toSort[leftIndex] > pivot && toSort[rightIndex] < pivot {
+			toSort = swap(toSort, leftIndex, rightIndex)
 		}
 
 		if toSort[rightIndex] > pivot {
 			rightIndex--
-			shouldSwap = false
-		}
-
-		if shouldSwap {
-			toSort = swap(toSort, leftIndex, rightIndex)
 		}
 	}
 
 	toSort = swap(toSort, leftIndex, max)
 
-	diff := math.Abs(float64(max - min))
+	if pivotIndex-min > 1 {
+		toSort = quickSort(toSort, min, pivotIndex-1)
+	}
 
-	if diff > 1 {
-		toSort = quickSort(toSort, min, pivotIndex)
-		toSort = quickSort(toSort, pivotIndex, max)
+	if max-pivotIndex > 1 {
+		toSort = quickSort(toSort, pivotIndex+1, max)
 	}
 
 	return toSort
 }
 
 func main() {
-	toSort := []int{24, 13, 9, 64, 7, 23, 34, 47, 5}
+	toSort := []int{5, 10, 15, 25, 0, 0, 0, 1, 1, 1, 2, 230}
 	sorted := quickSort(toSort, 0, len(toSort)-1)
 	fmt.Println(sorted)
 }
